@@ -1,14 +1,6 @@
 <template>
-  <el-dialog
-    :visible.sync="showModal"
-    width="400px"
-    :lock-scroll="false"
-    custom-class="gray-bg br10 p-share"
-    :show-close="false"
-    center
-    @close="change"
-  >
-    <div v-if="widgetModalStatus === 0" class="padding1">
+  <el-dialog :visible.sync="showModal" width="400px" :lock-scroll="false" custom-class="gray-bg br10" @close="change">
+    <div v-if="widgetModalStatus === 0">
       <div class="widget-content-button">
         <div class="widget-button" @click="createWidget">
           <div class="widget-button-img">
@@ -31,7 +23,7 @@
       </div>
       <SocialShare v-if="socialShow" :article="article" />
     </div>
-    <div v-if="widgetModalStatus === 1" class="padding1 widget-writecontent">
+    <div v-if="widgetModalStatus === 1" class="widget-writecontent">
       <p class="widget-title">
         创建widget
       </p>
@@ -39,19 +31,19 @@
         v-model="widgetContent"
         type="textarea"
         placeholder="添加简介(选填)"
-        :rows="4"
+        :rows="2"
       />
       <div class="widget-footer">
         <a class="help" href="javascript:;" @click="reviewHelp">如何使用widget？</a>
         <a class="create" href="javascript:;" @click="createWidgetContent">创建widget</a>
       </div>
     </div>
-    <div v-if="widgetModalStatus === 2" class="padding1 widget-help">
+    <div v-if="widgetModalStatus === 2" class="widget-help">
       <p class="widget-help-title">
         什么是文章widget
       </p>
       <p class="widget-help-content">
-        widget功能可以为当前文章生成一个精美的展示卡片。您可以将widget代码复制到瞬MATATAKI的文章编辑器中，这样就可以在您的文章中插入精美的文章展示卡片。当然，您展示的文章卡片同样也会具有邀请链接的功能。
+        widget功能可以为当前文章生成一个精美的展示卡片。您可以将widget代码复制到智能签名的文章编辑器中，这样就可以在您的文章中插入精美的文章展示卡片。当然，您展示的文章卡片同样也会具有邀请链接的功能。
       </p>
       <br>
       <p class="widget-help-title">
@@ -61,12 +53,12 @@
         1.你可以选择自定义展示卡片上的简介内容<br>
         2.点击“创建widget”按钮获取代码<br>
         3.点击“复制代码”按钮获取widget代码<br>
-        4.粘贴代码到瞬MATATAKI编辑器中即可展示<br>
+        4.粘贴代码到智能签名编辑器中即可展示<br>
       </p>
 
       <a class="widget-help-button" href="javascript:;" @click="backPage">知道了</a>
     </div>
-    <div v-if="widgetModalStatus === 3" class="padding1 widget-review">
+    <div v-if="widgetModalStatus === 3" class="widget-review">
       <p class="widget-title">
         widget预览
       </p>
@@ -88,7 +80,7 @@
         <a class="create" href="javascript:;" @click="copyCode(widgetContentIframe)">复制代码</a>
       </div>
     </div>
-    <div v-if="widgetModalStatus === 4" class="padding2">
+    <div v-if="widgetModalStatus === 4">
       <QRCodeDialog
         :share-info="{
           title: article.title,
@@ -96,8 +88,7 @@
           name: article.nickname || article.author,
           time: article.time,
           content: article.content,
-          shareLink,
-          cover
+          shareLink
         }"
         @change="change"
       />
@@ -148,27 +139,20 @@ export default {
       const { protocol, host } = window.location
       // console.debug(this.article);
       const articleUrl = `${protocol}//${host}/p/${article.id}`
-      const shareLink = this.isLogined ? `${articleUrl}/?invite=${currentUserInfo.id}&referral=${currentUserInfo.id}` : articleUrl
-      return `《${article.title}》by ${article.username} \n${shareLink}\n瞬MATATAKI，发布瞬间，灵感永存 \n 点击链接首次登入可领取额外500积分奖励！`
+      const shareLink = this.isLogined ? `${articleUrl}?invite=${currentUserInfo.id}` : articleUrl
+      return `《${article.title}》by ${article.username} \n${shareLink}\n投资好文，分享有收益 ！`
     },
     shareLink() {
-      // 应产品需求 这里改为移动端的链接
-
       const { article, currentUserInfo } = this
-      // const { protocol, host } = window.location
+      const { protocol, host } = window.location
       // console.debug(this.article);
-      // const articleUrl = `${protocol}//${host}/p/${article.id}`
-      const articleUrl = `${process.env.WX_SHARE_HOST}/p/${article.id}`
-      const shareLink = this.isLogined ? `${articleUrl}?invite=${currentUserInfo.id}&referral=${currentUserInfo.id}` : articleUrl
+      const articleUrl = `${protocol}//${host}/p/${article.id}`
+      const shareLink = this.isLogined ? `${articleUrl}?invite=${currentUserInfo.id}` : articleUrl
       return shareLink
     },
     id() {
       return this.article.id
-    },
-    cover() {
-      if (!this.article) return ''
-      return this.article.cover ? this.$API.getImg(this.article.cover) : ''
-    },
+    }
   },
   watch: {
     showModal(val) {
@@ -183,14 +167,14 @@ export default {
       // 如果显示创建widget 但是没有内容
       if (newVal === 3 && !this.widgetContent) {
         let invite = this.currentUserInfo.id
-        invite = invite ? `&invite=${invite}&referral=${invite}` : ''
+        invite = invite ? `&invite=${invite}` : ''
         this.widgetContentIframe = `<iframe width="100%" height="180" src='${urlAddress}/widget/?id=${this.id}${invite}' frameborder=0></iframe>`
       }
     },
     widgetContent(newVal) {
       let content = ''
       let invite = this.currentUserInfo.id
-      invite = invite ? `&invite=${invite}&referral=${invite}` : ''
+      invite = invite ? `&invite=${invite}` : ''
       // 去前后空格防止空内容
       if (strTrim(newVal)) content = `&content=${newVal}`
       this.widgetContentIframe = `<iframe width="100%" height="180" src='${urlAddress}/widget/?id=${this.id}${content}${invite}' frameborder=0></iframe>`
@@ -240,12 +224,4 @@ export default {
 </script>
 
 <style src="./share.less" scoped lang="less">
-</style>
-
-
-<style lang="less">
-.p-share .el-dialog__header,
-.p-share .el-dialog__body {
-  padding: 0;
-}
 </style>

@@ -83,7 +83,7 @@ body {
     font-size: 2rem;
   }
   &:hover {
-    background: @purpleDark;
+    background: @blue;
     .icon {
       color: #ffffff;
     }
@@ -92,6 +92,7 @@ body {
 
 a {
   text-decoration: none;
+  color: #1C9CFE;
 }
 .zindex-3000 {
   z-index:3000 !important;
@@ -119,9 +120,6 @@ a {
   }
   &.top80 {
     .stickyTop(80px);
-  }
-  &.top380 {
-    .stickyTop(380px);
   }
 }
 // tag position sticky end
@@ -162,18 +160,3 @@ a {
   max-width: 100%;
 }
 // 文章详情 内容样式 end
-
-// lazy img cover
-.img-lazy .el-image__error, .el-image__inner, .el-image__placeholder {
-  object-fit: cover;
-}
-
-.el-button--purple {
-  background-color: @purpleDark;
-  border-color: @purpleDark;
-  &:hover {
-    background-color: @purpleDark;
-    border-color: @purpleDark;
-    opacity: 0.9;
-  }
-}

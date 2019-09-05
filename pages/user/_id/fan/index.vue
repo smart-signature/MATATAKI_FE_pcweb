@@ -11,6 +11,7 @@
           :card="{
             ...item,
             id: item.uid }"
+          @updateList="updateList"
         />
       </no-content-prompt>
       <user-pagination
@@ -76,10 +77,22 @@ export default {
           page: i
         }
       })
+    },
+    async updateList() {
+      const data = await this.$API.getFans(this.$route.params.id, this.currentPage)
+      this.paginationData(data)
     }
   }
 }
 </script>
 
+<style lang="less" scoped>
+.fans-card {
+  margin-top: 40px;
+  // &:nth-child(odd) {
+    // margin-right: 30px;
+  // }
+}
+</style>
 <style lang="less" scoped src="../../index.less">
 </style>

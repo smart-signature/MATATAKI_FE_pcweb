@@ -5,7 +5,7 @@
         <!-- 适用于 首页, 商品页, 标签页 -->
         <!-- 区分那种卡 -->
         <div class="cover">
-          <el-image v-if="cover" class="img-lazy" :src="cover" lazy alt="cover" />
+          <img v-if="cover" :src="cover" alt="cover">
           <img v-else src="@/assets/img/article_bg.svg" alt="cover">
         </div>
         <div class="container">
@@ -50,8 +50,7 @@
           </div>
         </div>
       </div>
-      <!-- 文章卡片内容 -->
-      <div v-if="isSearchCad" v-clampy="4" class="content-text search-res" v-html="xssContent" />
+      <div v-if="isSearchCad" class="content-text search-res" v-html="xssContent" />
     </div>
     <div style="width: 0;height: 0;" />
   </n-link>
@@ -140,9 +139,6 @@ export default {
   background: #fff;
   transition: all 0.3s;
   border-radius: 10px;
-  padding: 20px;
-  margin-top: 20px;
-  box-sizing: border-box;
   &:hover {
     transform: translate(0, -4px);
     box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.1);
@@ -161,9 +157,14 @@ export default {
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
+  padding: 20px;
   overflow: hidden;
+  margin-top: 14px;
   text-decoration: none;
 
+  &:nth-child(1) {
+    margin-top: 20px;
+  }
   &-title {
     height: 56px;
     margin: 20px 0;
@@ -200,7 +201,7 @@ export default {
   border-radius: @borderRadius6;
   transform: rotate(0deg);
 
-  .img-lazy {
+  img {
     .imgObjectFitCover();
     transition: all 0.3s;
     &:hover {
@@ -229,7 +230,7 @@ export default {
     cursor: pointer;
     font-size:16px;
     font-weight:500;
-    color: @purpleDark;
+    color: #1C9CFE;
     line-height:22px;
   }
   .data {
@@ -276,7 +277,7 @@ export default {
 }
 
 .content-text {
-  margin-top: 20px;
+  padding: 0 20px 20px;
   font-size:16px;
   font-weight:400;
   color: #333;
@@ -288,10 +289,11 @@ export default {
 
 </style>
 
-<style lang="less">
+<style>
 .search-res em {
+  font-size: 20px;
   font-weight: bold;
   font-style: normal;
-  color: @purpleDark;
+  color: #1C9CFE;
 }
 </style>

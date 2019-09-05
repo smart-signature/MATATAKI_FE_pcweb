@@ -5,7 +5,7 @@
     </div>
     <div class="avatar-content">
       <avatar class="avatar" :src="userInfo.avatar" />
-      <div v-if="isMe($route.params.id)" class="info-type" :class="iconType">
+      <div class="info-type" :class="iconType">
         <svg-icon title="账号类型" class="icon-type" :icon-class="iconType" />
       </div>
     </div>
@@ -217,7 +217,7 @@ export default {
       .num {
         font-size:24px;
         font-weight:600;
-        color:@purpleDark;
+        color:rgba(28,156,254,1);
         line-height:33px;
         padding: 0;
         margin: 0;

@@ -46,7 +46,7 @@ export default {
 <style scoped lang="less">
 .article-info {
   margin-top: 40px;
-  padding: 15px 0;
+  padding: 15px 40px;
   border: 1px solid #dbdbdb;
   border-radius: 40px;
   box-sizing: border-box;
@@ -62,7 +62,7 @@ export default {
       margin: 0 5px 0 10px;
     }
     .num {
-      color:  @purpleDark;
+      color:  @blue;
       font-weight: 700;
     }
   }

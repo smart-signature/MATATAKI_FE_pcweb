@@ -6,12 +6,11 @@
       height: size
     }"
   >
-    <el-image v-if="src" :src="src" class="img-lazy" alt="avatar">
-      <div slot="error" class="image-slot">
-        <i class="el-icon-picture-outline" />
-      </div>
-    </el-image>
-    <svg-icon v-else icon-class="avatar" class="icon-avatar" />
+    <template v-if="imgStatus">
+      <img v-if="src" :src="src" alt="avatar" @onerror="() => imgStatus = false">
+      <svg-icon v-else icon-class="avatar" class="icon-avatar" />
+    </template>
+    <svg-icon v-else icon-class="crack" class="icon-crack" />
   </div>
 </template>
 
@@ -30,6 +29,7 @@ export default {
   },
   data() {
     return {
+      imgStatus: true
     }
   }
 }
@@ -40,13 +40,6 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-.img-lazy {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 .g-avatar {
   overflow: hidden;
@@ -68,13 +61,5 @@ export default {
     object-fit: cover;
     color: #5d5d5d;
   }
-}
-
-</style>
-
-<style lang="less">
-.g-avatar .el-icon-picture-outline {
-  font-size: 18px;
-  color: #848484;
 }
 </style>

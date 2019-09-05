@@ -8,7 +8,7 @@
           <svg-icon v-show="type==='bullshit'" icon-class="bullshit-solid" class="solid-icon" />
         </div>
         <div>
-          <span class="title">评价领取积分</span>
+          <span class="title">评价领取SS积分</span>
         </div>
       </div> -->
       <div class="btns-container">
@@ -16,28 +16,27 @@
           <button :class="['great-cointainer', {'actived': type === 'great'}]" :disabled="clicked" @click="like">
             <svg-icon icon-class="great-solid" />
           </button>
-          <span>推荐 <em class="like">{{ article && article.likes }}</em></span>
+          <span>推荐</span>
         </div>
         <div class="btn-outer bullshit-outer">
           <button :class="['bullshit-cointainer', {'actived': type === 'bullshit'}]" :disabled="clicked" @click="dislike">
             <svg-icon icon-class="bullshit-solid" />
           </button>
-          <span>不推荐 <em class="like">{{ article && article.dislikes }}</em></span>
+          <span>不推荐</span>
         </div>
       </div>
     </div>
     <div class="article-info">
-      <div v-if="!clicked" class="info1">
-        <span>已阅读{{ readTime }}</span>
+      <div class="info1" v-if="!clicked">
+        <span>已阅读{{readTime}}</span>
       </div>
       <template v-else>
-        <div v-if="p.reading > 0" class="info1">
-          <span>阅读 + {{ p.reading }}积分</span>
+        <div class="info1" v-if="p.reading > 0">
+          <span>阅读 + {{p.reading}}SS积分</span>
         </div>
-        <div v-if="p.reading_new > 0" class="info1">
-          <span>新文章 + {{ p.reading_new }}积分</span>
+        <div class="info1" v-if="p.reading_new > 0">
+          <span>新文章 + {{p.reading_new}}SS积分</span>
         </div>
-        <div />
       </template>
     </div>
   </div>
@@ -58,10 +57,6 @@ export default {
         likes: 0,
         is_liked: 0
       })
-    },
-    article: {
-      type: Object,
-      required: true
     }
   },
   data() {
@@ -70,7 +65,6 @@ export default {
   computed: {
     // 是否被点击过
     clicked() {
-      console.log(this.article)
       return this.type !== 'title'
     },
     type() {
@@ -104,10 +98,10 @@ export default {
         reading: 0
       }
       for (let i = 0; i < l; i++) {
-        if (points[i].type === 'read_new') {
+        if (points[i].type === 'reading_new') {
           result.reading_new = points[i].amount
         }
-        if (points[i].type === 'read_dislike' || points[i].type === 'read_like') {
+        if (points[i].type === 'reading_dislike' || points[i].type === 'reading_like') {
           result.reading = points[i].amount
         }
       }
@@ -154,17 +148,17 @@ export default {
     cursor: pointer;
     user-select: none;
     background: #F1F1F1;
-    color: @purpleDark;
+    color: @blue;
     border: none;
     span {
       margin-left: 3px;
     }
     &:hover:enabled {
-      background: @purpleDark;
+      background: @blue;
       color: #fff;
     }
     &.actived {
-      background: @purpleDark;
+      background: @blue;
       color: #fff;
     }
   }
@@ -193,16 +187,16 @@ export default {
   height: 80px;
   border-radius: 60%;
   box-sizing: border-box;
-  border: 4px solid @purpleDark;
+  border: 4px solid @blue;
   background: #F1F1F1;
-  color: @purpleDark;
+  color: @blue;
   font-size: 20px;
   font-weight: 700;
   .flexCenter();
   margin-bottom: 10px;
   cursor: pointer;
   &:hover {
-    background: @purpleDark;
+    background: @blue;
     color: #fff;
   }
 }
@@ -213,7 +207,7 @@ export default {
   line-height: 20px;
 }
 .clickStyle {
-  background: @purpleDark;
+  background: @blue;
   color: #fff;
 }
 .hidden {
@@ -221,7 +215,7 @@ export default {
 }
 .article-info {
   margin-top: 40px;
-  padding: 15px 0;
+  padding: 15px 40px;
   border: 1px solid #dbdbdb;
   border-radius: 40px;
   box-sizing: border-box;
@@ -240,16 +234,9 @@ export default {
       margin: 0 5px 0 10px;
     }
     .num {
-      color:  @purpleDark;
+      color:  @blue;
       font-weight: 700;
     }
   }
-}
-
-.like {
-  font-size:16px;
-  color: @purpleDark;
-  font-style: normal;
-  margin-left: 4px;
 }
 </style>

@@ -15,7 +15,7 @@
         </el-button>
 
         <el-dropdown trigger="click" @command="postArticle">
-          <el-button type="primary" class="el-button--purple" icon="el-icon-s-promotion">
+          <el-button type="primary" icon="el-icon-s-promotion">
             发布
           </el-button>
           <el-dropdown-menu slot="dropdown" class="user-dorpdown">
@@ -341,12 +341,12 @@ export default {
           this.setTag(data.data)
         } else {
           this.$message.success(data.message)
-          this.$router.push({ path: '/article' })
+          this.$router.push({ path: '/' })
         }
       } catch (error) {
         console.error(error)
         this.$message.error('获取文章信息发生错误')
-        this.$router.push({ path: '/article' })
+        this.$router.push({ path: '/' })
       }
       // 设置文章内容
       const { data } = articleData.data
@@ -416,7 +416,7 @@ export default {
         }
         const response = await this.$API.publishArticle({ article, signature })
         if (response.code !== 0) throw new Error(response.message)
-        success(response.data, '发文成功，奖励100 积分')
+        success(response.data, '发文成功，奖励10 SS积分')
       } catch (error) {
         console.error(error)
         failed(error)
@@ -481,7 +481,7 @@ export default {
     },
     // 发布||修改按钮
     async sendThePost() {
-      // 没有登录 点击发布按钮都提示登录  编辑获取内容的时候会被前面的func拦截并返回home page
+      // 没有登陆 点击发布按钮都提示登陆  编辑获取内容的时候会被前面的func拦截并返回home page
       if (!this.isLogined) return this.$store.commit('setLoginModal', true)
 
       // 标题或内容为空时

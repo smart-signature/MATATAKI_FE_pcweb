@@ -12,7 +12,6 @@
           登录
         </el-button>
         <div class="bottom-tip">
-          <span class="red">首次登录领100积分！</span>
           <!-- <a href="javascript:void(0);">忘记密码</a> |  -->
           <a href="javascript:void(0);" @click="switchRegister">注册</a>
         </div>
@@ -22,9 +21,7 @@
       <h1 class="oauth-title">
         第三方账号登录
       </h1>
-      <p class="warning-tip">
-        不同帐号内容不互通
-      </p>
+      <p class="warning-tip">不同帐号内容不互通</p>
       <div class="oauth">
         <div class="oauth-bg bg-gray" @click="walletLogin('EOS')">
           <svg-icon class="eos" icon-class="eos_login" />
@@ -37,7 +34,6 @@
         </div>
       </div>
     </div>
-    <img v-if="referral" class="referral" src="@/assets/img/invite.png" alt="已邀请">
   </section>
 </template>
 
@@ -77,18 +73,11 @@ export default {
           { min: 8, max: 16, message: '密码长度在 8 到 16 个字符', trigger: 'blur' }
         ]
       },
-      referral: false
     }
   },
   computed: {
     ...mapState(['userConfig']),
     ...mapGetters(['currentUserInfo'])
-  },
-  mounted(){
-    if (process.browser) {
-      this.isReferral()
-      this.getReferral()
-    }
   },
   methods: {
     ...mapActions(['signIn']),
@@ -104,16 +93,14 @@ export default {
         await this.signIn({ idProvider: type })
         this.$store.commit('setLoginModal', false)
         this.$backendAPI.accessToken = this.currentUserInfo.accessToken
-        window.location.reload() // 登录完成刷新一次
       } catch (error) {
         try {
           await this.signIn({ idProvider: type })
           this.$store.commit('setLoginModal', false)
           this.$backendAPI.accessToken = this.currentUserInfo.accessToken
-          window.location.reload() // 登录完成刷新一次
         } catch (err) {
           console.log('signInx 错误', err)
-          this.$message.error('登录失败')
+          this.$message.error('登陆失败')
         }
       }
     },
@@ -131,7 +118,6 @@ export default {
               this.$store.commit('setUserConfig', { idProvider: 'Email' })
               this.$message.success('登录成功')
               this.$emit('hide')
-              window.location.reload() // 登录完成刷新一次
             } else {
               this.$message.error(`登录失败，账号或密码错误`)
             }
@@ -146,25 +132,6 @@ export default {
     },
     switchRegister() {
       this.$emit('switch')
-    },
-    // 是否有推荐
-    isReferral() {
-      let search = window.location.search.slice(1)
-      let searchArr = search.split('&')
-      let searchFilter = searchArr.filter((i) => i.includes('referral='))
-      // 有邀请id
-      if (searchFilter.length !== 0) this.$utils.setCookie('referral', searchFilter[0].slice(9))
-      else { // 如果没有邀请连接
-        // 检查是否有邀请id 有则删除
-        let referral = this.$utils.getCookie('referral')
-        if (referral) this.$utils.delCookie('referral')
-      }
-      // console.log(this.referral)
-    },
-    // 得到邀请状态
-    getReferral() {
-      let referral = this.$utils.getCookie('referral')
-      if (referral) this.referral = true
     }
   }
 }
@@ -172,17 +139,10 @@ export default {
 
 <style lang="less" scoped>
 .bottom-tip {
-  width: 100%;
   font-size: 14px;
   float: right;
   line-height: 20px;
   margin-top: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  .red {
-    color:#FB6877;
-  }
 }
 .oauth-box {
   display: flex;
@@ -199,7 +159,7 @@ export default {
   .warning-tip {
     font-size: 14px;
     color: #FB6877;
-    margin: 14px 0 22px;
+    margin-bottom: 20px;
     font-weight: 400;
   }
   .oauth {
@@ -239,12 +199,5 @@ export default {
 }
 .bg-purple {
   background: #882592;
-}
-
-.referral {
-  height: 30px;
-  position: absolute;
-  right: 20px;
-  top: 0;
 }
 </style>

@@ -3,24 +3,22 @@
     <div class="mw footer-content">
       <div class="content">
         <div class="nav">
-          <a class="href" target="_blank" href="https://www.matataki.io/p/782">使用手册</a>
+          <a class="href" target="_blank" href="http://www.smartsignature.io/p/617">使用手册</a>
           <a class="href" href="javascript:;">隐私政策</a>
           <a class="href" href="javascript:;">用户协议</a>
           <a class="href" target="_blank" href="https://github.com/smart-signature/smart-signature-future">关于我们</a>
-          <a class="href" target="_blank" href="http://www.matataki.io/p/616">智能公告牌</a>
+          <a class="href" target="_blank" href="http://www.smartsignature.io/p/616">智能公告牌</a>
         </div>
         <p class="link">
           友情链接:
           <a href="http://linkidol.pro/" target="_blank">链接偶像</a>
           |
           <a href="https://orange.xyz/" target="_blank">橙皮书</a>
-          |
-          <a href="https://eosvote.com/" target="_blank">EOSvote</a>
         </p>
       </div>
       <div>
         <div>
-          <img class="logo" src="@/assets/img/footer_logo1.png" alt="logo">
+          <img class="logo" src="@/assets/img/footer_logo.png" alt="logo">
           <div class="icon wechat-icon">
             <div class="wechat">
               <div class="wechat-img">
@@ -73,7 +71,7 @@ export default {}
 }
 
 .logo {
-  width: 178px;
+  width: 152px;
 }
 .content {
   .nav {

@@ -22,7 +22,7 @@
         a 47 47 0 1 1 0 94
         a 47 47 0 1 1 0 -94
         "
-          stroke="#542DE0"
+          stroke="#1C9CFE"
           fill="none"
           stroke-linecap="round"
           stroke-width="5"

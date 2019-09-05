@@ -4,7 +4,7 @@
     <!-- 区分那种卡 -->
     <n-link target="_blank" :to="{name: 'p-id', params: {id: card && card.id}}">
       <div class="cover">
-        <el-image v-if="cover" class="img-lazy" :src="cover" alt="cover" lazy />
+        <img v-if="cover" :src="cover" alt="cover">
         <img v-else src="@/assets/img/article_bg.svg" alt="cover">
       </div>
       <div class="article-title">
@@ -50,7 +50,7 @@
       <div class="info">
         <!-- 暂时用文章页代替跳转地址 -->
         <n-link
-          :to=" {name: 'user-id', params: {id: uid}} "
+          :to=" {name: 'user-id', params: {id: Uid}} "
           target="_blank"
           class="author"
         >
@@ -128,7 +128,7 @@ export default {
     tagType() {
       return this.card && this.card.tags && (this.card.tags.length !== 0 ? this.card.tags[0].type : '')
     },
-    uid() {
+    Uid() {
       return this.card && this.card.uid
     },
     dateCard() {
@@ -149,29 +149,11 @@ export default {
 
 <style lang="less" scoped src="./index.less"></style>
 
-<style lang="less">
+<style>
 .article-title h3 em {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
   font-style: normal;
-  color: @purpleDark;
-}
-
-.recommend-card .cover {
-  img {
-    transition: all 0.3s;
-    &:hover {
-      transform: scale(1.04);
-    }
-  }
-}
-.article-card .cover,
-.commodity-card .cover {
-  img {
-    transition: all 0.3s;
-    &:hover {
-      transform: scale(1.02);
-    }
-  }
+  color: #1C9CFE;
 }
 </style>

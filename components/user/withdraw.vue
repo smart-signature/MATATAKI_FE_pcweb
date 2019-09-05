@@ -86,7 +86,7 @@ export default {
           },
           {
             title: '手续费',
-            titleDes: '(限时由瞬MATATAKI官方支付)',
+            titleDes: '(限时由智能签名官方支付)',
             placeholder: '输入或长按黏贴地址',
             value: 0,
             des: 'EOS',
@@ -123,7 +123,7 @@ export default {
           },
           {
             title: '手续费',
-            titleDes: '(限时由瞬MATATAKI官方支付)',
+            titleDes: '(限时由智能签名官方支付)',
             placeholder: '输入或长按黏贴地址',
             value: 0.01,
             des: 'ONG',
@@ -191,7 +191,7 @@ export default {
         })
     },
     writeAddres() {
-      // 如果登录的平台等于进入的币提现类型 默认带上提现地址
+      // 如果登陆的平台等于进入的币提现类型 默认带上提现地址
       if (this.currentUserInfo.idProvider === this.type) { this.withdrawData.list[0].value = this.currentUserInfo.name }
     },
     withdrawButton() {
@@ -320,7 +320,7 @@ export default {
   margin: 20px;
   border-radius: 6px;
   display: block;
-  background-color: @purpleDark;
+  background-color: #1C9CFE;
   cursor: pointer;
   text-align: center;
 }
@@ -328,7 +328,7 @@ export default {
 .with {
   width:300px;
   height:40px;
-  background:@purpleDark;
+  background:@blue;
   border-radius: @borderRadius6;
   color: #fff;
   border: none;

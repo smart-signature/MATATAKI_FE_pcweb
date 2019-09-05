@@ -2,48 +2,39 @@
   <div class="outer">
     <div ref="container" :class="{ 'white-bg': !canvas }">
       <div v-if="!canvas" ref="capture" class="container">
-        <div class="header">
-          <div class="info">
-            <avatar size="40px" :src="shareInfo.avatar" />
-            <span class="username">{{ shareInfo.name }}</span>
+        <section class="header">
+          <img src="@/assets/img/smartsignature.svg" alt="SmartSignature">
+          <h1>投资好文，分享有收益</h1>
+        </section>
+        <section class="content-container">
+          <h1>{{ shareInfo.title }}</h1>
+          <div class="desc">
+            <div class="user">
+              <img class="avatar" :src="shareInfo.avatar" alt="" :onerror="defaultAvatar">
+              <span class="name">{{ shareInfo.name }}</span>
+            </div>
+            <span class="time">{{ shareInfo.time }}</span>
           </div>
-          <p v-clampy="2">
-            {{ shareInfo.title }}
-          </p>
-          <div v-if="shareInfo.cover" class="full" />
-          <div
-            v-if="shareInfo.cover"
-            :style="coverImage"
-            class="cover"
-          />
-        </div>
-        <div class="content-container">
-          <p v-clampy="8" class="markdown-body" v-html="htmlStr" />
-        </div>
+          <div class="content markdown-body" v-html="htmlStr" />
+        </section>
         <div class="hide-article-box">
-          —— 扫描二维码 阅读领积分 ——
+          <span>—— 扫描二维码 免费读全文 ——</span>
         </div>
-        <section class="footer-share">
-          <div class="flex">
-            <img class="logo" src="@/assets/img/share_logo.png" alt="logo">
-            <div ref="qr" class="qrcode" />
-          </div>
-          <img class="des" src="@/assets/img/des_logo.png" alt="logo">
+        <section class="footer">
+          <img src="@/assets/img/logo-word.svg" alt="SmartSignature">
+          <div ref="qr" class="qrcode" />
         </section>
       </div>
       <img v-else :src="downloadLink" alt="" style="width: 100%;">
     </div>
-    <a href="javascript:;" class="save-btn" @click="toCanvas">
-      生成并下载图片
-    </a>
+    <button class="save-btn" @click="toCanvas">
+      生成图片
+    </button>
   </div>
 </template>
 
 <script>
 /* eslint-disable */
-
-import avatar from "@/components/avatar";
-import { xssFilter } from '@/utils/xss'
 
 export default {
   name: 'QRCodeDialog',
@@ -55,15 +46,10 @@ export default {
       }
     }
   },
-  components: {
-    avatar
-  },
   data() {
     return {
-      canvas: null,
-      coverImage: {
-        backgroundImage: `url(${this.shareInfo.cover})`
-      }
+      defaultAvatar: `this.src="${require('@/assets/avatar-default.svg')}"`,
+      canvas: null
     }
   },
   computed: {
@@ -77,15 +63,10 @@ export default {
       )
     },
     htmlStr() {
-      return xssFilter(this.filterStr(this.shareInfo.content).substr(0, 400));
+      return this.filterStr(this.shareInfo.content).substr(0, 300);
     }
   },
   watch: {},
-  beforeDestroy(){
-    // 离开删除插入的a dom
-    let downloadImg = document.querySelector('#downloadImg')
-    if (downloadImg) downloadImg.remove()
-  },
   mounted() {
     this.genQRCode()
     console.log(this.isAPP)
@@ -100,29 +81,20 @@ export default {
       this.$emit('change', false)
     },
     saveLocal(canvas) {
-      let link = document.createElement("a");
-      link.id = 'downloadImg'
-      link.href = canvas.toDataURL();
+      let link = document.createElement('a')
+      link.href = canvas.toDataURL()
       link.setAttribute('download', `${this.shareInfo.title}.png`)
-      link.style.display = "none";
-      document.body.appendChild(link);
-      link.click();
+      link.style.display = 'none'
+      link.click()
     },
     toCanvas() {
       const loading = this.$loading({
         text: `图片生成中...`
       })
-      if (this.canvas) {
-        document.querySelector('#downloadImg').click()
-        loading.close()
-        return
-      }
       html2canvas(this.$refs.capture, {
         useCORS: true,
         scrollX: 0,
-        scrollY: 0,
-        width: this.$refs.capture.clientWidth,
-        height: this.$refs.capture.clientHeight,
+        scrollY: 0
       }).then(canvas => {
         this.canvas = canvas
         this.saveLocal(canvas)
@@ -136,8 +108,8 @@ export default {
     genQRCode() {
       new QRCode(this.$refs.qr, {
         text: this.shareInfo.shareLink,
-        width: 80,
-        height: 80,
+        width: 55,
+        height: 55,
       });
     }
   }
@@ -155,36 +127,36 @@ export default {
   margin: auto;
 }
 .outer {
-  background: #fff;
+  background: transparent;
   overflow: auto;
-  position: relative;
 }
 .hide-article-box {
   width: 100%;
   background-image: linear-gradient(-180deg, rgba(255, 255, 255, 0) 0%, #fff 70%);
-  padding-bottom: 30px;
+  padding-bottom: 20px;
   text-align: center;
   position: relative;
-  z-index: 99;
+  z-index: 9999;
   padding-top: 100px;
+  bottom: 2px;
   margin-top: -100px;
-  color: #B2B2B2;
+  color: #b2b2b2;
   font-size: 14px;
 }
 .save-btn {
-  position: absolute;
-  font-size: 14px;
-  text-decoration: underline;
-  color: @purpleDark;
-  border-radius: 4px;
+  font-size: 20px;
+  color: #ffffff;
+  border-radius: 6px;
   border: none;
+  background: #1c9cfe;
+  width: 335px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  margin: 20px auto 0 auto;
   user-select: none;
-  right: 6px;
-  bottom: 6px;
   &.disabled {
     background: #b2b2b2;
   }
@@ -196,95 +168,80 @@ export default {
   width: 100%;
   margin: auto;
 }
-
 .header {
-  height: 200px;
-  background-color: @purpleDark;
-  position: relative;
-  overflow: hidden;
-  .info {
-    display: flex;
-    align-items: center;
-    z-index: 10;
-    position: relative;
-    padding: 24px 0 0 20px;
-  }
-  .username {
-    font-size:16px;
-    font-weight:500;
-    color: #fff;
-    padding: 0;
-    margin: 0 0 0 10px;
-    letter-spacing: 1px;
-  }
-  p {
-    display: block;
-    width: 80%;
-    font-size:20px;
-    color: #fff;
-    padding: 0;
-    margin: 60px auto 0;
-    line-height: 1.5;
-    letter-spacing: 1px;
-    z-index: 10;
-    position: relative;
-  }
-  .cover {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 0;
-    background-size: cover;
-    background-position: center;
-  }
-  .full {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 1;
-    background-color: rgba(0, 0, 0, .4);
-  }
-}
-.content-container {
-  box-sizing: border-box;
-  // overflow: hidden;
-  padding: 40px 40px 50px;
-  margin: 0;
-  min-height: 290px;
-  p {
-    font-size: 14px;
-    line-height: 1.8;
-    padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: inherit;
+  height: 130px;
+  background: url('../../assets/img/share-bg.svg');
+  h1 {
+    font-size: 20px;
+    color: #ffffff;
+    line-height: 28px;
     margin: 0;
   }
 }
-
-.footer-share {
+.content-container {
+  width: inherit;
+  padding: 20px;
   box-sizing: border-box;
-  padding: 0 0 40px;
-  .flex {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    .logo {
-      height: 80px;
-      margin-right: 15px;
-    }
-    .qrcode {
-      background: #ffffff;
-      width: 80px;
-      height: 80px;
-      margin-left: 15px;
-    }
+  h1 {
+    color: #000000;
+    font-size: 20px;
+    line-height: 24px;
+    margin: 0;
   }
-  .des {
-    display: block;
-    width: 140px;
-    margin: 20px auto 0;
+}
+.content {
+  // max-height: 180px;
+  overflow: hidden;
+}
+.desc {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+.user {
+  display: flex;
+  align-items: center;
+  max-width: 70%;
+}
+.time {
+  color: #b2b2b2;
+  font-size: 12px;
+}
+.name {
+  color: #000;
+  font-size: 12px;
+  margin-left: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+.footer {
+  background: #f1f1f1;
+  height: 75px;
+  width: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  box-sizing: border-box;
+  img {
+    width: 50%;
+  }
+  .qrcode {
+    background: #ffffff;
+    width: 55px;
+    height: 55px;
   }
 }
 </style>

@@ -59,12 +59,11 @@ export default {
     ...mapGetters(['currentUserInfo', 'isLogined']),
     cover() {
       if (this.article.cover) return this.$API.getImg(this.article.cover)
-      return 'https://ssimg.frontenduse.top/avatar/2019/08/30/c1d6ae7ed4e6102cb45d0a8f656d5569.png'
+      return 'http://ssimg.frontenduse.top/image/2019/07/15/fe217e00671f5062951cc1ebad79fa1d.png'
     },
     socialLink() {
       const title = this.article.title
-      let link = encodeURIComponent(window.location.href)
-      if (this.isLogined) link += `/?referral=${this.currentUserInfo.id}`
+      const link = encodeURIComponent(window.location.href)
       const pic = this.cover
       return {
         weibo: `http://service.weibo.com/share/share.php?appkey=&title=${title}&url=${link}&pic=${pic}&searchPic=false&style=simple`,
@@ -74,7 +73,7 @@ export default {
     },
     shareLink() {
       let url = `${process.env.WX_SHARE_HOST}/article/${this.$route.params.id}`
-      if (this.isLogined) url += `?invite=${this.currentUserInfo.id}&referral=${this.currentUserInfo.id}`
+      if (this.isLogined) url += `?invite=${this.currentUserInfo.id}`
       return url
     }
   },
@@ -108,7 +107,7 @@ export default {
 }
 .wx-share {
   text-align: center;
-  margin-top: 60px;
+  margin-top: 40px;
   .flexCenter();
   flex-direction: column;
   .qrcode {

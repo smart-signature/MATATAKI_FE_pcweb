@@ -24,7 +24,6 @@
         </el-button>
       </el-form-item>
     </el-form>
-    <img v-if="referral" class="referral" src="@/assets/img/invite.png" alt="已邀请">
   </section>
 </template>
 
@@ -91,32 +90,56 @@ export default {
         repassword: { validator: validatePass2, trigger: 'blur' },
         smscode: { validator: checkCode, trigger: 'blur' }
       },
-      referral: false
     }
   },
-    mounted(){
-    if (process.browser) this.getReferral()
-  },
   methods: {
+    // 注册并初始化geeTest
+    registerInitGT(cb) {
+      this.$API.registerGT().then(res => {
+        window.initGeetest({
+          // 以下 4 个配置参数为必须，不能缺少
+          gt: res.gt,
+          challenge: res.challenge,
+          offline: !res.success, // 表示用户后台检测极验服务器是否宕机
+          new_captcha: res.new_captcha, // 用于宕机时表示是新验证码的宕机
+          lang: lang,
+          product: "bind", // 产品形式，包括：float，popup
+          width: "300px"
+          // 更多配置参数说明请参见：http://docs.geetest.com/install/client/web-front/
+        }, (captchaObj) => {
+          this.captchaObj = captchaObj;
+          captchaObj.onReady(() => {
+            captchaObj.verify();
+          }).onSuccess(() => {
+            const result = captchaObj.getValidate();
+            if (!result) {
+              this.$message.error('请先完成校验')
+            } else {
+              cb(result);
+            }
+            // this.validateGT(result, captchaObj);
+          });
+        });
+      })
+    },
+    confirmSendCode() {
+      this.loading = true
+      this.$API.getCaptcha(this.registerForm.email).then(res => {
+        if (res.code === 0) {
+          this.countDown()
+          this.$message.success('验证码发送成功，5分钟内使用有效')
+        } else {
+          this.$message.error('验证码发送失败')
+        }
+        this.loading = false
+      })
+    },
     sendCode() {
       this.$refs.registerForm.validateField('email', async (error) => {
         if (error) {
           console.error('sendCode error', error)
         } else {
-          try {
-            this.loading = true
-            const res = await this.$API.getCaptcha(this.registerForm.email)
-            if (res.code === 0) {
-              this.countDown()
-              this.$message.success('验证码发送成功，5分钟内使用有效')
-            } else {
-              this.$message.error('验证码发送失败')
-            }
-            this.loading = false
-          } catch (error) {
-            this.$message.error('验证码发送失败')
-            this.loading = false
-          }
+          this.registerInitGT(this.confirmSendCode)
         }
       })
     },
@@ -140,16 +163,12 @@ export default {
     submitRegisterForm() {
       this.$refs.registerForm.validate(async (valid) => {
         if (valid) {
-          let params = {
-            email: this.registerForm.email,
-            captcha: this.registerForm.smscode,
-            password: this.registerForm.password
-          }
-          // 检查是否有邀请id
-          let referral = this.$utils.getCookie('referral')
-          if (referral) Object.assign(params, { referral: referral })
           try {
-            const res = await this.$API.register(params)
+            const res = await this.$API.register({
+              email: this.registerForm.email,
+              captcha: this.registerForm.smscode,
+              password: this.registerForm.password
+            })
             if (res.code === 0) {
               this.$message.success('注册成功，请登录')
               this.$emit('switch')
@@ -166,11 +185,6 @@ export default {
         }
       })
     },
-    // 得到邀请状态
-    getReferral() {
-      let referral = this.$utils.getCookie('referral')
-      if (referral) this.referral = true
-    }
   }
 }
 </script>
@@ -187,12 +201,5 @@ export default {
       text-align: center;
     }
   }
-}
-
-.referral {
-  height: 30px;
-  position: absolute;
-  right: 20px;
-  top: 0;
 }
 </style>

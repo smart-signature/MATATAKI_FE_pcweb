@@ -41,7 +41,7 @@
           font-size: 20px;
           font-weight: bold;
           font-style: inherit;
-          color: @purpleDark;
+          color: #1C9CFE;
         }
       }
     }
@@ -110,7 +110,7 @@
   width: 100%;
   cursor: pointer;
   overflow: hidden;
-  .img-lazy {
+  img {
     .imgObjectFitCover();
     transition: all 0.3s;
   }
@@ -130,7 +130,7 @@
   display: flex;
   .title {
     font-weight: bold;
-    color: @purpleDark;
+    color: #1C9CFE;
     cursor: pointer;
   }
 
@@ -178,12 +178,27 @@
 // cover
 .recommend-card .cover {
   height: 187px;
+  img {
+    &:hover {
+      transform: scale(1.04);
+    }
+  }
 }
 .article-card .cover {
   height: 390px;
+  img {
+    &:hover {
+      transform: scale(1.02);
+    }
+  }
 }
 .commodity-card .cover {
   height: 134px;
+  img {
+    &:hover {
+      transform: scale(1.02);
+    }
+  }
 }
 
 .commodity-card.tag .cover {

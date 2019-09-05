@@ -36,7 +36,6 @@
           }"
         />
       </header>
-      <articleIpfs :hash="article.hash" />
 
       <div class="Post-RichText markdown-body article-content" v-html="compiledMarkdown" />
       <ArticleFooter style="margin-top: 20px;" :article="article" />
@@ -70,7 +69,6 @@
           v-if="!isProduct"
           :time="timeCount"
           :token="ssToken"
-          :article="article"
           @like="like"
           @dislike="dislike"
         />
@@ -81,8 +79,7 @@
         v-for="(item, index) in article.tags"
         :key="index"
         class="tag-card"
-        :to=" {name: 'tag-id', params: {id: item.id}, query: {name: item.name, type: item.type}}"
-      >
+        :to=" {name: 'tag-id', params: {id: item.id}, query: {name: item.name, type: item.type}}">
         {{ item.name }}
       </n-link>
     </div>
@@ -110,9 +107,9 @@
           width="300"
           trigger="manual"
         >
-          <p>点击“分享文章”按钮与朋友共享好文章~</p>
+          <p>点击左侧「分享文章」按钮可以随时分享给你的好友哦～</p>
           <div style="text-align: right; margin: 0">
-            <el-button class="el-button--purple" type="primary" size="mini" @click="poopverDone('visible1')">
+            <el-button type="primary" size="mini" @click="poopverDone('visible1')">
               知道了
             </el-button>
           </div>
@@ -134,9 +131,9 @@
         width="300"
         trigger="manual"
       >
-        <p>指向此图标后，选择“推荐”或“不推荐”，即可领取阅读积分奖励！</p>
+        <p>阅读文章后请指向左侧图标并点击「推荐」或者「不推荐」，可以领取积分！</p>
         <div style="text-align: right; margin: 0">
-          <el-button class="el-button--purple" type="primary" size="mini" @click="poopverDone('visible')">
+          <el-button type="primary" size="mini" @click="poopverDone('visible')">
             知道了
           </el-button>
         </div>
@@ -145,7 +142,6 @@
           slot="reference"
           :time="timeCount"
           :token="ssToken"
-          :article="article"
           @like="like"
           @dislike="dislike"
         />
@@ -198,7 +194,6 @@ import CommentList from '@/components/comment/List'
 import UserInfoHeader from '@/components/article/UserInfoHeader'
 import ArticleInfoFooter from '@/components/article/ArticleInfoFooter'
 import ArticleFooter from '@/components/article/ArticleFooter'
-import articleIpfs from '@/components/article/article_ipfs'
 import InvestModal from '@/components/modal/Invest'
 import PurchaseModal from '@/components/modal/Purchase'
 import ShareModal from '@/components/modal/Share'
@@ -219,7 +214,6 @@ export default {
     UserInfoHeader,
     ArticleInfoFooter,
     ArticleFooter,
-    articleIpfs,
     articleTransfer,
     CoinBtn,
     TokenFooter,
@@ -253,13 +247,18 @@ export default {
         visible2: false
       },
       timerShare: null, // 分享计时器
-      timeCountShare: 0, // 分享计时
-      article: Object.create(null),
-      postsIdReadnewStatus: false // 新文章阅读是否上报
+      timeCountShare: 0 // 分享计时
     }
   },
   head() {
     return {
+      script: [
+        {
+          type: 'text/javascript',
+          id: 'pocket-btn-js',
+          src: 'https://widgets.getpocket.com/v1/j/btn.js?v=1'
+        }
+      ],
       title: this.article.title,
       meta: [
         { hid: 'description', name: 'description', content: this.article.short_content },
@@ -271,7 +270,7 @@ export default {
         { hid: 'twitter:url', name: 'twitter:url', property: 'twitter:url', content: `${process.env.VUE_APP_PC_URL}/p/${this.article.id}` },
         { hid: 'twitter:image', name: 'twitter:image', property: 'twitter:image', content: this.$API.getImg(this.article.cover) },
         /* <!--  Meta for OpenGraph --> */
-        { hid: 'og:site_name', property: 'og:site_name', content: '瞬MATATAKI' },
+        { hid: 'og:site_name', property: 'og:site_name', content: '智能签名' },
         { hid: 'og:title', property: 'og:title', content: this.article.title },
         { hid: 'og:type', property: 'og:type', content: 'article' },
         { hid: 'og:url', property: 'og:url', content: `${process.env.VUE_APP_PC_URL}/p/${this.article.id}` },
@@ -309,10 +308,6 @@ export default {
   },
   watch: {
     timeCount(v) {
-      if (!this.postsIdReadnewStatus && v >= 30) {
-        this.postsIdReadnew()
-        this.postsIdReadnewStatus = true
-      }
       if (v >= 150) {
         clearInterval(this.timer)
       }
@@ -391,12 +386,6 @@ export default {
     showUserPopover() {
       if (!store.get('userVisible')) this.visiblePopover.visible2 = true
     },
-    async getArticleInfoFunc() {
-      await this.$API.getArticleInfo(this.$route.params.id)
-        .then(res => {
-          if (res.code === 0) this.article = res.data
-        })
-    },
     // 推荐
     like() {
       this.showUserPopover()
@@ -405,10 +394,7 @@ export default {
           clearInterval(this.timer)
           this.ssToken.is_liked = 2
           this.ssToken.points = res.data
-          // this.feedbackShow = true
-          this.$message.success('评价成功，阅读积分奖励已领取')
-
-          this.getArticleInfoFunc() // 更新文章信息
+          this.feedbackShow = true
         }
       }).catch((error) => {
         if (error.response.status === 401) {
@@ -424,10 +410,7 @@ export default {
           clearInterval(this.timer)
           this.ssToken.is_liked = 1
           this.ssToken.points = res.data
-          // this.feedbackShow = true
-          this.$message.success('评价成功，阅读积分奖励已领取')
-
-          this.getArticleInfoFunc() // 更新文章信息
+          this.feedbackShow = true
         }
       }).catch((error) => {
         if (error.response.status === 401) {
@@ -472,7 +455,7 @@ export default {
       const delSuccess = async () => {
         this.$message({ duration: 2000, message: '删除成功,三秒后自动跳转到首页' })
         await this.$utils.sleep(3000)
-        this.$router.push('/article')
+        this.$router.push('/')
       }
       const fail = (err) => {
         this.$message.error('删除失败')
@@ -488,7 +471,7 @@ export default {
           return fail(error)
         }
       }
-      this.$confirm('该文章已上传至 IPFS 永久保存, 本次操作仅删除瞬MATATAKI中的显示.', '确认信息', {
+      this.$confirm('该文章已上传至 IPFS 永久保存, 本次操作仅删除智能签名中的显示.', '确认信息', {
         distinguishCancelAndClose: true,
         confirmButtonText: '确定',
         cancelButtonText: '取消'
@@ -515,7 +498,7 @@ export default {
         return false
       }
       if (!this.isLogined) {
-        this.$message.warning('登录后即可投资')
+        this.$message.warning('登陆后即可投资')
         return false
       }
       // email github 无法赞赏
@@ -550,9 +533,9 @@ export default {
           this.isSupport = res.data.is_support
           this.ssToken = {
             points: res.data.points || [], // 用户是否喜欢了这篇文章
-            dislikes: res.data.dislikes,
-            likes: res.data.likes,
-            is_liked: res.data.is_liked || 0 // is_liked：0：没有操作过，1：不推荐，2：推荐
+            dislikes: res.data.dislikes, // 用户获得的积分
+            likes: res.data.likes, // 文章被赞次数
+            is_liked: res.data.is_liked || 0 // 文章被喷次数
           }
         }
       } catch (error) {
@@ -563,19 +546,6 @@ export default {
       setTimeout(() => {
         this.commentRequest = Date.now()
       }, 3000)
-    },
-    postsIdReadnew() {
-      const isNDaysAgo = this.$utils.isNDaysAgo(3, this.article.create_time)
-      if (this.article.is_readnew !== 1 && !isNDaysAgo) {
-        console.log('阅读新文章增加积分')
-        this.$API.postsIdReadnew(this.article.id, this.timeCount)
-          .then(res => {
-            if (res.code === 0) {
-              this.$message.success('阅读新文章奖励5积分, 评价后可领取更多积分!')
-              console.log('阅读新文章增加积分成功')
-            } else console.log('阅读新文章增加积分失败')
-          }).catch(err => console.log(`阅读新文章增加积分失败${err}`))
-      }
     }
   }
 

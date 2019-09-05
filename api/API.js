@@ -74,8 +74,8 @@ export default {
       noLoading: true
     })
   },
-  async register({email,password,captcha, referral}) {
-    return request.post('/login/regist', { email, password, captcha: captcha.toString(), referral })
+  async register({email,password,captcha}) {
+    return request.post('/login/regist', { email, password, captcha: captcha.toString() })
   },
   async login({username, password}) {
     return request.post('/login/account', { username, password })
@@ -216,28 +216,11 @@ export default {
   searchRecommend(params){
     return request('/search/recommend', params)
   },
-  // 推荐作者||用户
-  usersRecommend(params){
-    return request('/users/recommend', params)
-  },
-  // 获取任务状态
-  userPointStatus() {
-    return request('/user/pointStatus')
-  },
-  // 领取任务积分
-  userClaimTaskPoint(data) {
+  registerGT() {
     return request({
-      method: 'POST',
-      url: '/user/claimTaskPoint',
-      data: data
+      url:`/gt/register-slide?t=${(new Date()).getTime()}`,
+      method: 'get',
+      dataType: "json",
     })
-  },
-  // 获取首页统计数据
-  postsStats() {
-    return request('/posts/stats')
-  },
-  // 阅读获取积分
-  postsIdReadnew(id, time) {
-    return request.post(`/posts/${id}/readnew`, { time })
-  },
+  }
 }

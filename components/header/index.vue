@@ -23,7 +23,6 @@
             v-model="searchInput"
             type="text"
             class="input"
-            placeholder="请输入搜索内容"
             @keyup.enter="jutmpToSearch"
             @focus="searchFcous = true"
             @blur="inputBlur"
@@ -39,63 +38,62 @@
             </li>
           </ul>
         </div>
-
-        <el-popover
-          v-model="visible"
-          placement="bottom"
-          width="300"
-          trigger="manual"
-        >
-          <p>点击小星星即可查看积分的获取记录</p>
-          <div style="text-align: right; margin: 0">
-            <el-button class="el-button--purple" type="primary" size="mini" @click="$emit('popoverVisible', false)">
-              知道了
-            </el-button>
-          </div>
-          <point slot="reference" />
-        </el-popover>
-
-        <!-- v-if="isLogined" -->
         <svg-icon
+          v-if="isLogined"
           class="create"
           icon-class="write"
           :style="customizeHeaderIconColorComputed"
           @click="writeP"
         />
-        <!-- <span v-else class="integral">新用户登录领100积分</span> -->
-
-        <el-dropdown
+        <span v-else class="integral">新用户登录领100SS积分</span>
+        <el-popover
           v-if="isLogined"
+          v-model="visible"
+          placement="bottom"
+          width="300"
+          trigger="manual"
         >
-          <div class="home-head-avatar" @click="$emit('login')">
-            <avatar :size="'30px'" :src="avatar" />
+          <p>请用鼠标指向用户头像并点击「我的账户」前往积分页面查看积分详情。</p>
+          <div style="text-align: right; margin: 0">
+            <el-button type="primary" size="mini" @click="$emit('popoverVisible', false)">
+              知道了
+            </el-button>
           </div>
-          <el-dropdown-menu slot="dropdown" class="user-dorpdown">
-            <el-dropdown-item>
-              {{ currentUserInfo.nickname || currentUserInfo.name }}
-            </el-dropdown-item>
-            <el-dropdown-item divided>
-              <n-link class="link" :to="{name: 'user-account', params:{id: currentUserInfo.id}}">
-                我的账户
-              </n-link>
-            </el-dropdown-item>
-            <el-dropdown-item>
-              <n-link class="link" :to="{name: 'user-id', params:{id: currentUserInfo.id}}">
-                我的主页
-              </n-link>
-            </el-dropdown-item>
-            <el-dropdown-item>
-              <n-link class="link" :to="{name: 'user-setting', params:{id: currentUserInfo.id}}">
-                设置
-              </n-link>
-            </el-dropdown-item>
-            <el-dropdown-item>
-              <div class="link" @click="btnsignOut">
-                退出
-              </div>
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+
+          <el-dropdown
+            slot="reference"
+          >
+            <div class="home-head-avatar" @click="$emit('login')">
+              <avatar :size="'30px'" :src="avatar" />
+            </div>
+            <el-dropdown-menu slot="dropdown" class="user-dorpdown">
+              <el-dropdown-item>
+                {{ currentUserInfo.nickname || currentUserInfo.name }}
+              </el-dropdown-item>
+              <el-dropdown-item divided>
+                <n-link class="link" :to="{name: 'user-account', params:{id: currentUserInfo.id}}">
+                  我的账户
+                </n-link>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <n-link class="link" :to="{name: 'user-id', params:{id: currentUserInfo.id}}">
+                  我的主页
+                </n-link>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <n-link class="link" :to="{name: 'user-setting', params:{id: currentUserInfo.id}}">
+                  设置
+                </n-link>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <div class="link" @click="btnsignOut">
+                  退出
+                </div>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </el-popover>
+
         <a
           v-else
           href="javascript:void(0);"
@@ -110,9 +108,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-// import homeLogo from '@/assets/img/home_logo.png' // 因为tag页面不需要换颜色了, 可以逐步删掉props
-import point from './point'
-import homeLogo from '@/assets/img/m_logo.png'
+import homeLogo from '@/assets/img/home_logo.png'
 import homeLogoWhile from '@/assets/img/home_logo_white.png'
 import avatar from '@/components/avatar/index.vue'
 
@@ -121,8 +117,7 @@ import { strTrim } from '@/utils/reg'
 export default {
   name: 'HomeHead',
   components: {
-    avatar,
-    point
+    avatar
   },
   props: {
     // 自定义头部背景
@@ -140,6 +135,11 @@ export default {
       type: String,
       default: '#000'
     },
+    // 自定义头部logo
+    customizeHeaderLogo: {
+      type: String,
+      default: 'default'
+    },
     // 搜索内容
     searchQueryVal: {
       type: String,
@@ -156,7 +156,7 @@ export default {
       nav: [
         {
           title: '文章',
-          url: 'article'
+          url: 'index'
         },
         {
           title: '商品',
@@ -233,15 +233,9 @@ export default {
     btnsignOut() {
       if (confirm('确定退出吗?')) {
         this.$utils.delCookie('ACCESS_TOKEN')
-        this.$utils.delCookie('idProvider')
-        window.localStorage.clear()
         // this.$utils.deleteAllCookies()
-        this.$router.push({
-          name: 'index'
-        })
-        setTimeout(() => {
-          window.location.reload()
-        }, 1000)
+        this.$router.push('/')
+        window.location.reload()
       }
     },
     // 跳转搜索
@@ -276,7 +270,6 @@ export default {
         })
         .catch(err => { console.log(err) })
     }
-
   }
 }
 </script>
@@ -312,13 +305,13 @@ export default {
     align-items: center;
   }
   .logo {
-    width: 205px;
+    width: 114px;
   }
   .create {
     width: 24px;
     height: 24px;
     cursor: pointer;
-    margin: 0 40px 0 0;
+    margin: 0 40px;
     color: #000;
   }
   &-avatar {
@@ -418,6 +411,12 @@ export default {
   }
 }
 
+.integral {
+  font-size:16px;
+  font-weight:500;
+  color:rgba(28,156,254,1);
+  margin: 0 20px;
+}
 </style>
 
 <style lang="less">
@@ -453,7 +452,7 @@ export default {
     display: none;
   }
   .el-dropdown-menu__item:focus, .el-dropdown-menu__item:not(.is-disabled):hover  {
-    background-color: @purpleDark;
+    background-color: @blue;
     color: #fff;
     .link {
       color: #fff;

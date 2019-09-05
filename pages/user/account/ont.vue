@@ -96,7 +96,7 @@ export default {
 <style lang="less" scoped src="../../index.less">
 </style>
 
-<style lang="less">
+<style>
 .assets-margin {
   margin: 40px 0 0;
 }

@@ -61,7 +61,7 @@
           <span class="title">接受他人文章权限移交</span>
           <el-switch
             v-model="isTransfer"
-            active-color="#542DE0"
+            active-color="#1c9cfe"
             @change="changeTransfer"
           />
         </div>
@@ -352,7 +352,7 @@ export default {
   background-color: #bfbfbf;
   cursor: pointer;
   &.active {
-    background: @purpleDark;
+    background: @blue;
   }
 }
 </style>

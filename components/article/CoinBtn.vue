@@ -1,6 +1,6 @@
 <template>
   <div class="coin-btn">
-    <div @mouseenter="enterBtn" @mouseleave="leaveBtn">
+    <div  @mouseenter="enterBtn" @mouseleave="leaveBtn">
       <Progress :p="time" :clicked="clicked">
         <template slot="text">
           <span v-show="!clicked" class="center-text">+ {{ readPoint }}</span>
@@ -8,15 +8,15 @@
           <svg-icon v-show="type==='bullshit'" icon-class="bullshit-solid" class="center-icon" />
         </template>
       </Progress>
-      <div v-show="showTip" class="like-btn">
+      <div v-show="showTip" class="like-btn" >
         <div v-if="!clicked" class="btns-container">
           <button class="great-cointainer" :disabled="clicked" @click="like">
             <svg-icon icon-class="great" />
-            <span>推荐<em class="like">{{ article && article.likes }}</em></span>
+            <span>推荐</span>
           </button>
           <button class="bullshit-cointainer" :disabled="clicked" @click="dislike">
             <svg-icon icon-class="bullshit" />
-            <span>不推荐<em class="like">{{ article && article.dislikes }}</em></span>
+            <span>不推荐</span>
           </button>
         </div>
         <p v-if="!clicked">
@@ -24,15 +24,15 @@
         </p>
         <template v-else>
           <p v-for="(item, i) in points.arr" :key="i">
-            {{ (item.text + item.amount) || 0 }}积分
+            {{ item.text }} +{{ item.amount }}SS积分
           </p>
         </template>
         <div class="tip-container">
           <p class="tip">
-            * 阅读2分30秒 +10积分
+            * 阅读2分30秒 +10SS积分
           </p>
           <p class="tip">
-            * 新内容 +5积分
+            * 新内容 +5SS积分
           </p>
         </div>
       </div>
@@ -43,7 +43,7 @@
       <svg-icon v-show="type==='bullshit'" icon-class="bullshit-solid" />
     </div> -->
     <div :class="['title-container', {'hidden': showTip}]">
-      <a class="title" href="/user/account/points" target="_blank">{{ clicked ? `+${points.all}积分` : '积分' }}</a>
+      <a class="title" href="/user/account/integral" target="_blank">{{ clicked ? `+${points.all}SS积分` : 'SS积分' }}</a>
     </div>
   </div>
 </template>
@@ -67,10 +67,6 @@ export default {
         likes: 0,
         is_liked: 0
       })
-    },
-    article: {
-      type: Object,
-      required: true
     }
   },
   data() {
@@ -101,10 +97,10 @@ export default {
         // reading: '用户阅读', // 用户阅读
         // beread: '+', // 读者的文章被阅读
         // publish: '+', // 发布文章
-        read_new: '阅读新文章', // 用户阅读新文章，额外获得的
+        reading_new: '阅读新文章', // 用户阅读新文章，额外获得的
         // beread_new: '+', // 读者的新文章被阅读，额外获得的
-        read_like: '用户阅读', // 读者的新文章被阅读，额外获得的
-        read_dislike: '用户阅读' // 读者的新文章被阅读，额外获得的
+        reading_like: '用户阅读', // 读者的新文章被阅读，额外获得的
+        reading_dislike: '用户阅读' // 读者的新文章被阅读，额外获得的
       }
       const arr = []
       let all = 0
@@ -175,11 +171,11 @@ export default {
 
 <style scoped lang="less">
 .center-text {
-  color: @purpleDark;
+  color: #1C9CFE;
   font-size: 18px;
 }
 .center-icon {
-  color: @purpleDark;
+  color: #1C9CFE;
   font-size: 20px;
 }
 .title-container {
@@ -212,11 +208,12 @@ export default {
     .flexCenter();
   }
   .btn-base {
+    width: 75px;
     font-size: 14px;
     text-align: center;
     border-radius: 6px;
     box-sizing: border-box;
-    border: 1px solid @purpleDark;
+    border: 1px solid @blue;
     .flexCenter();
     height: 30px;
     cursor: pointer;
@@ -226,13 +223,13 @@ export default {
     }
   }
   .great-cointainer {
-    background: @purpleDark;
+    background: @blue;
     color: #fff;
     .btn-base();
   }
   .bullshit-cointainer {
     background: transparent;
-    color: @purpleDark;
+    color: @blue;
     .btn-base();
     margin-left: 10px;
   }
@@ -248,16 +245,16 @@ export default {
   height: 60px;
   border-radius: 60%;
   box-sizing: border-box;
-  border: 4px solid @purpleDark;
+  border: 4px solid @blue;
   background: #F1F1F1;
-  color: @purpleDark;
+  color: @blue;
   font-size: 20px;
   font-weight: 700;
   .flexCenter();
   margin-bottom: 10px;
   cursor: pointer;
   &:hover {
-    background: @purpleDark;
+    background: @blue;
     color: #fff;
   }
 }
@@ -268,16 +265,10 @@ export default {
   line-height: 20px;
 }
 .clickStyle {
-  background: @purpleDark;
+  background: @blue;
   color: #fff;
 }
 .hidden {
   visibility: hidden;
-}
-
-.like {
-  font-size:16px;
-  font-style: normal;
-  margin-left: 4px;
 }
 </style>
