@@ -102,7 +102,6 @@ export default {
           challenge: res.challenge,
           offline: !res.success, // 表示用户后台检测极验服务器是否宕机
           new_captcha: res.new_captcha, // 用于宕机时表示是新验证码的宕机
-          lang: lang,
           product: "bind", // 产品形式，包括：float，popup
           width: "300px"
           // 更多配置参数说明请参见：http://docs.geetest.com/install/client/web-front/
