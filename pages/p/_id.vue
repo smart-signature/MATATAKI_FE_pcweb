@@ -280,21 +280,21 @@ export default {
     return {
       title: this.article.title,
       meta: [
-        { hid: 'description', name: 'description', content: this.article.short_content },
+        { hid: 'description', name: 'description', property: 'description', content: this.article.short_content },
         /* <!--  Meta for Twitter Card --> */
         { hid: 'twitter:card', name: 'twitter:card', property: 'twitter:card', content: 'summary' },
         { hid: 'twitter:site', name: 'twitter:site', property: 'twitter:site', content: '@Andoromeda' },
         { hid: 'twitter:title', name: 'twitter:title', property: 'twitter:title', content: this.article.title },
-        { hid: 'twitter:description', name: 'twitter:description', property: 'twitter:description', content: this.article.short_content },
+        { hid: 'twitter:description', name: 'description', property: 'twitter:description', content: this.article.short_content },
         { hid: 'twitter:url', name: 'twitter:url', property: 'twitter:url', content: `${process.env.VUE_APP_PC_URL}/p/${this.article.id}` },
         { hid: 'twitter:image', name: 'twitter:image', property: 'twitter:image', content: this.$API.getImg(this.article.cover) },
         /* <!--  Meta for OpenGraph --> */
-        { hid: 'og:site_name', property: 'og:site_name', content: '瞬MATATAKI' },
-        { hid: 'og:title', property: 'og:title', content: this.article.title },
-        { hid: 'og:type', property: 'og:type', content: 'article' },
-        { hid: 'og:url', property: 'og:url', content: `${process.env.VUE_APP_PC_URL}/p/${this.article.id}` },
-        { hid: 'og:image', property: 'og:image', content: this.$API.getImg(this.article.cover) },
-        { hid: 'og:description', property: 'og:description', content: this.article.short_content }
+        { hid: 'og:site_name', name: 'og:site_name', property: 'og:site_name', content: '瞬MATATAKI' },
+        { hid: 'og:title', name: 'og:title', property: 'og:title', content: this.article.title },
+        { hid: 'og:type', name: 'og:type', property: 'og:type', content: 'article' },
+        { hid: 'og:url', name: 'og:url', property: 'og:url', content: `${process.env.VUE_APP_PC_URL}/p/${this.article.id}` },
+        { hid: 'og:image', name: 'og:image', property: 'og:image', content: this.$API.getImg(this.article.cover) },
+        { hid: 'og:description', name: 'description', property: 'og:description', content: this.article.short_content }
         /* end */
       ]
     }
@@ -608,7 +608,7 @@ export default {
         this.$API.postsIdReadnew(this.article.id, this.timeCount)
           .then(res => {
             if (res.code === 0) {
-              this.$message.success('阅读新文章奖励5积分, 评价后可领取更多积分!')
+              this.$message.success(`阅读新文章奖励${this.$point.readNew}积分, 评价后可领取更多积分!`)
               console.log('阅读新文章增加积分成功')
             } else console.log('阅读新文章增加积分失败')
           }).catch(err => console.log(`阅读新文章增加积分失败${err}`))
