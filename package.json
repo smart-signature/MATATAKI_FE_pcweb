@@ -34,7 +34,7 @@
     "lodash": "^4.17.15",
     "markdown-it": "^9.0.1",
     "mavon-editor": "^2.7.5",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "normalize.css": "^8.0.1",
     "nuxt": "^2.0.0",
     "ontology-dapi": "^0.4.9",
